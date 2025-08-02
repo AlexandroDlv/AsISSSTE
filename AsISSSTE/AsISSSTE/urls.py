@@ -21,6 +21,6 @@ from page import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('prueba/', views.vista_prueba, name='vista_prueba'),
+    path('registro/', views.registro_derechohabiente, name='registro_derechohabiente'),
     path('', views.redireccion),
-
 ]

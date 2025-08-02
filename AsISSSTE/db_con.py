@@ -8,4 +8,4 @@ load_dotenv(dotenv_path=env_path)
 MONGODB_URI = os.environ['MONGODB_URI']
 client = MongoClient(MONGODB_URI)
 
-db=client['AsISSSTE']
+db=client['asissste']
