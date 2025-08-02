@@ -70,7 +70,7 @@ def registro_derechohabiente(request):
             "horario": request.POST.get("horario")
         }
         personas_col.insert_one(datos)
-        return redirect("personas")
+        return redirect("vista_personas")
 
     actividades = list(actividades_col.find())
     actividades_json = convertir_actividades(actividades)
