@@ -27,12 +27,10 @@ def inicia_sesion(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Conexión a la colección "personal"
         personal_col = db_con.db["personal"]
         usuario = personal_col.find_one({"usuario": username})
 
         if usuario and usuario["contraseña"] == password:
-            # Inicia sesión simulando autenticación con sesión propia
             request.session['usuario'] = usuario["usuario"]
             request.session['nombre'] = usuario["nombre"]
             return redirect('principal')
@@ -55,6 +53,16 @@ def registro_derechohabiente(request):
     personas_col = db_con.db["personas"]
 
     if request.method == "POST":
+        actividades_seleccionadas = request.POST.getlist("actividad")
+        horarios_seleccionados = request.POST.getlist("horario")
+
+        actividades_y_horarios = []
+        for act, hor in zip(actividades_seleccionadas, horarios_seleccionados):
+            actividades_y_horarios.append({
+                "actividad": act,
+                "horario": hor
+            })
+
         datos = {
             "id_Personal": generar_id_personal(),
             "nombre": request.POST.get("nombre"),
@@ -66,8 +74,7 @@ def registro_derechohabiente(request):
             "correo": request.POST.get("correo"),
             "fecha_registro": datetime.now().strftime("%Y-%m-%d"),
             "genero": request.POST.get("genero"),
-            "actividad": request.POST.get("actividad"),
-            "horario": request.POST.get("horario")
+            "actividades": actividades_y_horarios 
         }
         personas_col.insert_one(datos)
         return redirect("vista_personas")
@@ -78,7 +85,7 @@ def registro_derechohabiente(request):
 
 def vista_personas(request):
     personas_col = db_con.db["personas"]
-    datos = list(personas_col.find({}, {'_id': 0}))  # Quitamos _id para evitar problemas con la serialización
+    datos = list(personas_col.find({}, {'_id': 0})) 
     return render(request, 'personas.html', {'personas': datos})
 
 def vista_actividades(request):
@@ -101,64 +108,56 @@ def generar_id_personal():
 
 def exportar_asistencia_excel(request):
     personas_col = db_con.db["personas"]
-    asistencia_col = db_con.db["asistencia"]
-
     hoy = datetime.now()
     mes_actual = hoy.strftime("%B %Y")
     ultimo_dia = calendar.monthrange(hoy.year, hoy.month)[1]
     dias_mes = [f"{dia:02}" for dia in range(1, ultimo_dia + 1)]
 
     personas = list(personas_col.find({}, {"_id": 0}))
-    asistencia_por_actividad = {}
+    asistencia_por_actividad_horario = {}
 
     for persona in personas:
-        actividad = persona.get("actividad", "Sin Actividad")
-        if actividad not in asistencia_por_actividad:
-            asistencia_por_actividad[actividad] = []
+        actividades = persona.get("actividades", [])
+        for act in actividades:
+            nombre_actividad = act.get("actividad", "Sin Actividad")
+            horario = act.get("horario", "Sin Horario")
+            clave = f"{nombre_actividad} - {horario}"
 
-        asistencias = asistencia_col.find({
-            "id_Personal": persona["id_Personal"],
-            "fecha": {"$regex": f"^{hoy.strftime('%Y-%m')}"}
-        })
-        asistencias_dict = {a["fecha"][-2:]: a["asistio"] for a in asistencias}
-        persona["asistencias"] = asistencias_dict
+            if clave not in asistencia_por_actividad_horario:
+                asistencia_por_actividad_horario[clave] = []
 
-        asistencia_por_actividad[actividad].append(persona)
+            asistencia_por_actividad_horario[clave].append(persona)
 
-    # Crear libro de Excel
+    #archivo excel
     wb = Workbook()
     ws = wb.active
     ws.title = "Asistencia"
 
     fila_actual = 1
-    for actividad, personas in asistencia_por_actividad.items():
-        # Título de actividad
-        ws.merge_cells(start_row=fila_actual, start_column=1, end_row=fila_actual, end_column=2 + len(dias_mes))
-        cell = ws.cell(row=fila_actual, column=1)
-        cell.value = f"Asistencia - {actividad} - {mes_actual}"
-        cell.font = Font(bold=True, size=14)
+    for clave, personas in asistencia_por_actividad_horario.items():
+        ws.merge_cells(start_row=fila_actual, start_column=1, end_row=fila_actual, end_column=3 + len(dias_mes))
+        celda_titulo = ws.cell(row=fila_actual, column=1)
+        celda_titulo.value = f"Asistencia - {clave} - {mes_actual}"
+        celda_titulo.font = Font(bold=True, size=14)
         fila_actual += 1
 
-        # Encabezados
-        encabezados = ["ID Personal", "Nombre"] + dias_mes
+        encabezados = ["ID Personal", "Nombre", "Apellidos"] + dias_mes
         for col, encabezado in enumerate(encabezados, start=1):
             celda = ws.cell(row=fila_actual, column=col)
             celda.value = encabezado
             celda.font = Font(bold=True)
         fila_actual += 1
 
-        # Datos de asistencia
         for persona in personas:
-            ws.cell(row=fila_actual, column=1).value = persona["id_Personal"]
-            ws.cell(row=fila_actual, column=2).value = f'{persona.get("nombre", "")} {persona.get("apellidos", "")}'
-            for idx, dia in enumerate(dias_mes, start=3):
-                asistio = persona["asistencias"].get(dia, False)
+            ws.cell(row=fila_actual, column=1).value = persona.get("id_Personal", "")
+            ws.cell(row=fila_actual, column=2).value = persona.get("nombre", "")
+            ws.cell(row=fila_actual, column=3).value = persona.get("apellido", "")
+            for idx in range(4, 4 + len(dias_mes)):
                 ws.cell(row=fila_actual, column=idx).value = ""
             fila_actual += 1
 
-        fila_actual += 2  # Espacio entre actividades
+        fila_actual += 2 
 
-    # Enviar como archivo descargable
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     nombre_archivo = f"asistencia_{hoy.strftime('%Y_%m')}.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{nombre_archivo}"'
@@ -220,7 +219,7 @@ def registrar_actividad(request):
         }
 
         actividades_col.insert_one(nueva_actividad)
-        return redirect('vista_actividades')  # Asegúrate de que 'principal' esté en tus urls
+        return redirect('vista_actividades') 
 
     return render(request, "reg_actividad.html")
 
@@ -229,12 +228,12 @@ def editar_actividad(request, id_actividad):
     actividad = actividades_col.find_one({"id_actividad": id_actividad})
 
     if not actividad:
-        return redirect("vista_actividades")  # Por si no existe
+        return redirect("vista_actividades")
 
     if request.method == "POST":
         nuevo_nombre = request.POST.get("nombre")
         nuevos_horarios = request.POST.getlist("horarios")
-        nuevos_horarios = [h.strip() for h in nuevos_horarios if h.strip()]  # Filtrar vacíos
+        nuevos_horarios = [h.strip() for h in nuevos_horarios if h.strip()] 
 
         actividades_col.update_one(
             {"id_actividad": id_actividad},
@@ -254,12 +253,23 @@ def eliminar_actividad(request, id_actividad):
 
 def editar_persona(request, id_personal):
     personas_col = db_con.db["personas"]
+    actividades_col = db_con.db["actividades"]
     persona = personas_col.find_one({"id_Personal": id_personal})
 
     if not persona:
         return redirect("vista_personas")
 
     if request.method == "POST":
+        actividades_seleccionadas = request.POST.getlist("actividad")
+        horarios_seleccionados = request.POST.getlist("horario")
+
+        actividades_y_horarios = []
+        for act, hor in zip(actividades_seleccionadas, horarios_seleccionados):
+            actividades_y_horarios.append({
+                "actividad": act,
+                "horario": hor
+            })
+
         datos_actualizados = {
             "nombre": request.POST.get("nombre"),
             "apellido": request.POST.get("apellido"),
@@ -269,18 +279,20 @@ def editar_persona(request, id_personal):
             "telefono_emergencia": request.POST.get("telefono_emergencia"),
             "correo": request.POST.get("correo"),
             "genero": request.POST.get("genero"),
-            "actividad": request.POST.get("actividad"),
-            "horario": request.POST.get("horario")
+            "actividades": actividades_y_horarios
         }
 
         personas_col.update_one(
             {"id_Personal": id_personal},
             {"$set": datos_actualizados}
         )
-
         return redirect("vista_personas")
 
-    return render(request, "editar_persona.html", {"persona": persona})
+    actividades = list(actividades_col.find({}, {"_id": 0}))
+    return render(request, "editar_persona.html", {
+        "persona": persona,
+        "actividades": actividades
+    })
 
 def eliminar_persona(request, id_personal):
     personas_col = db_con.db["personas"]

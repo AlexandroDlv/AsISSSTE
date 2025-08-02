@@ -109,4 +109,18 @@ tr:hover {
     margin: 4px;
 }
 
+.col-actividades {
+    width: 250px; /* Puedes ajustarlo según necesites */
+    text-align: left; /* Para que el texto no quede centrado */
+}
 
+.col-actividades ul {
+    padding-left: 15px;
+    list-style-type: disc;
+    margin: 0;
+}
+
+.col-actividades li {
+    margin-bottom: 5px;
+    text-align: left;
+}

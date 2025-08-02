@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Derechohabientes</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/personas.css' %}">
 </head>
+
 <body>
 
     <h1>Personas Registradas</h1>
@@ -16,43 +18,49 @@
                 <th>ID Personal</th>
                 <th>Nombre</th>
                 <th>Apellidos</th>
-                <th>Edad</th>   
+                <th>Edad</th>
                 <th>CURP</th>
                 <th>Teléfono</th>
                 <th>Contacto de Emergencia</th>
                 <th>Correo</th>
                 <th>Fecha Registro</th>
                 <th>Género</th>
-                <th>Actividad</th>
-                <th>Horario</th>
+                <th class="col-actividades">Actividades Inscritas</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for persona in personas %}
-                <tr>
-                    <td>{{ persona.id_Personal }}</td>
-                    <td>{{ persona.nombre }}</td>
-                    <td>{{ persona.apellido }}</td>
-                    <td>{{ persona.edad }}</td>
-                    <td>{{ persona.curp }}</td>
-                    <td>{{ persona.telefono }}</td>
-                    <td>{{ persona.telefono_emergencia }}</td>
-                    <td>{{ persona.correo }}</td>
-                    <td>{{ persona.fecha_registro }}</td>
-                    <td>{{ persona.genero }}</td>
-                    <td>{{ persona.actividad }}</td>
-                    <td>{{ persona.horario }}</td>
-                    <td>
-                        <a href="{% url 'editar_persona' persona.id_Personal %}" class="btn-editar">Editar</a>
-                        <a href="{% url 'eliminar_persona' persona.id_Personal %}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ persona.id_Personal }}</td>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.apellido }}</td>
+                <td>{{ persona.edad }}</td>
+                <td>{{ persona.curp }}</td>
+                <td>{{ persona.telefono }}</td>
+                <td>{{ persona.telefono_emergencia }}</td>
+                <td>{{ persona.correo }}</td>
+                <td>{{ persona.fecha_registro }}</td>
+                <td>{{ persona.genero }}</td>
+                <td class="col-actividades">
+                    <ul>
+                        {% for item in persona.actividades %}
+                        <li>{{ item.actividad }} - {{ item.horario }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <a href="{% url 'editar_persona' persona.id_Personal %}" class="btn-editar">Editar</a>
+                    <a href="{% url 'eliminar_persona' persona.id_Personal %}" class="btn-eliminar"
+                        onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
-        
     </table>
+
     <a href="{% url 'registro' %}" class="btn-registrar">Registrar nuevo derechohabiente</a>
     <a href="{% url 'principal' %}" class="btn-regresar">← Regresar</a>
 </body>
+
 </html>

@@ -8,60 +8,76 @@
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Editar Usuario</h2>
+<div class="form-container">
+    <h2>Editar Usuario</h2>
 
-        <form method="POST">
-            {% csrf_token %}
-            <label>Nombre:
-                <input type="text" name="nombre" value="{{ persona.nombre }}" required>
-            </label>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Nombre:
+            <input type="text" name="nombre" value="{{ persona.nombre }}" required>
+        </label>
 
-            <label>Apellidos:
-                <input type="text" name="apellido" value="{{ persona.apellido }}" required>
-            </label>
+        <label>Apellidos:
+            <input type="text" name="apellido" value="{{ persona.apellido }}" required>
+        </label>
 
-            <label>Edad:
-                <input type="number" name="edad" value="{{ persona.edad }}" required>
-            </label>
+        <label>Edad:
+            <input type="number" name="edad" value="{{ persona.edad }}" required>
+        </label>
 
-            <label>CURP:
-                <input type="text" name="curp" value="{{ persona.curp }}" required>
-            </label>
+        <label>CURP:
+            <input type="text" name="curp" value="{{ persona.curp }}" required>
+        </label>
 
-            <label>Teléfono:
-                <input type="text" name="telefono" value="{{ persona.telefono }}" required>
-            </label>
+        <label>Teléfono:
+            <input type="text" name="telefono" value="{{ persona.telefono }}" required>
+        </label>
 
-            <label>Tel. Emergencia:
-                <input type="text" name="telefono_emergencia" value="{{ persona.telefono_emergencia }}" required>
-            </label>
+        <label>Tel. Emergencia:
+            <input type="text" name="telefono_emergencia" value="{{ persona.telefono_emergencia }}" required>
+        </label>
 
-            <label>Correo:
-                <input type="email" name="correo" value="{{ persona.correo }}" required>
-            </label>
+        <label>Correo:
+            <input type="email" name="correo" value="{{ persona.correo }}" required>
+        </label>
 
-            <label>Género:
-                <select name="genero">
-                    <option value="Masculino" {% if persona.genero == "Masculino" %}selected{% endif %}>Masculino</option>
-                    <option value="Femenino" {% if persona.genero == "Femenino" %}selected{% endif %}>Femenino</option>
-                    <option value="Otro" {% if persona.genero == "Otro" %}selected{% endif %}>Otro</option>
-                </select>
-            </label>
+        <label>Género:
+            <select name="genero">
+                <option value="Masculino" {% if persona.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+                <option value="Femenino" {% if persona.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+                <option value="Otro" {% if persona.genero == "Otro" %}selected{% endif %}>Otro</option>
+            </select>
+        </label>
 
-            <label>Actividad:
-                <input type="text" name="actividad" value="{{ persona.actividad }}" required>
-            </label>
+        <label>Actividades y Horarios:</label>
+        <div class="actividades-container">
+            {% for act in actividades %}
+                <div class="actividad-bloque">
+                    <label>
+                        <input type="checkbox" name="actividad" value="{{ act.nombre }}"
+                        {% for insc in persona.actividades %}
+                            {% if insc.actividad == act.nombre %}checked{% endif %}
+                        {% endfor %}
+                        > {{ act.nombre }}
+                    </label>
+                    <select name="horario">
+                        {% for horario in act.horarios %}
+                            <option value="{{ horario }}"
+                            {% for insc in persona.actividades %}
+                                {% if insc.actividad == act.nombre and insc.horario == horario %}selected{% endif %}
+                            {% endfor %}
+                            >{{ horario }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+        </div>
 
-            <label>Horario:
-                <input type="text" name="horario" value="{{ persona.horario }}" required>
-            </label>
+        <button type="submit">Guardar Cambios</button>
+    </form>
 
-            <button type="submit">Guardar Cambios</button>
-        </form>
-
-        <a href="{% url 'vista_personas' %}" class="btn-regresar">← Cancelar</a>
-    </div>
+    <a href="{% url 'vista_personas' %}" class="btn-regresar">← Cancelar</a>
+</div>
 
 </body>
 </html>
