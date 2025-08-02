@@ -20,7 +20,14 @@ from page import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('prueba/', views.vista_prueba, name='vista_prueba'),
-    path('registro/', views.registro_derechohabiente, name='registro_derechohabiente'),
-    path('', views.redireccion),
+    path('principal/', views.principal, name='principal'),
+    path('registro/', views.registro_derechohabiente, name='registro'),
+    path('actividades/', views.vista_actividades, name='vista_actividades'),
+    path('asistencia/', views.lista_asistencia, name='lista_asistencia'),
+    path('login/', views.inicia_sesion, name='login'),
+    path('', views.inicio, name='inicio'),
+    path('personas/', views.vista_personas, name='vista_personas'),
+    path('asistencia/exportar_excel/', views.exportar_asistencia_excel, name='exportar_excel'),
+    path("registro_actividad/", views.registrar_actividad, name="registro_actividad"),
+
 ]

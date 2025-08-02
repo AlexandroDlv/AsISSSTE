@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Principal</title>
+    <link rel="stylesheet" href="{% static 'css/principal.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Menú</h2>
+            <a href="{% url 'vista_personas' %}">Derechohabientes</a>
+            <a href="{% url 'vista_actividades' %}">Actividades</a>
+            <a href="{% url 'lista_asistencia' %}">Lista de Asistencia</a>
+        </div>
+        <div class="content">
+            <h1>Bienvenido {{ nombre }}! </h1>
+            <h2>Este es el sistema del Deportivo ISSSTE</h2>
+            <p>Selecciona una opción del menú para comenzar.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actividades</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/actividades.css' %}">
+</head>
+<body>
+    <h1>Listado de Actividades</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID Actividad</th>
+                <th>Nombre</th>
+                <th>Horarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for actividad in actividades %}
+                <tr>
+                    <td>{{ actividad.id_actividad }}</td>
+                    <td>{{ actividad.nombre }}</td>
+                    <td>
+                        <ul>
+                            {% for horario in actividad.horarios %}
+                                <li>{{ horario }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'registro_actividad' %}" class="btn-registrar">Registrar nueva actividad</a>
+
+    <a href="{% url 'principal' %}" class="btn-regresar">← Regresar</a>
+</body>
+</html>

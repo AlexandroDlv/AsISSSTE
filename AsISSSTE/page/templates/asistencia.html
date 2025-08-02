@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listas de Asistencia Mensual</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/asistencia.css' %}">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Listas de Asistencia - {{ mes_actual }}</h1>
+
+        <!-- Botón para descargar Excel -->
+        <a href="{% url 'exportar_excel' %}" class="btn btn-descargar">📥 Descargar Excel</a>
+    </div>
+
+    <!-- Botón para regresar -->
+    <a href="{% url 'principal' %}" class="btn btn-regresar">← Regresar</a>
+</body>
+</html>

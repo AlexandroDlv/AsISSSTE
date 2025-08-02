@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Actividad</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Registro de Actividad</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Nombre de la Actividad:</label>
+            <input type="text" name="nombre" required>
+
+            <label>Horarios:</label>
+            <div id="contenedor-horarios">
+                <input type="text" name="horarios" required placeholder="Ej. Lunes a Viernes, 7:00 AM - 8:00 AM">
+            </div>
+            <button type="button" onclick="agregarHorario()">Agregar otro horario</button>
+
+            <button type="submit">Registrar Actividad</button>
+        </form>
+        <a href="{% url 'vista_actividades' %}" class="btn-regresar">← Regresar</a>
+    </div>
+
+    <script>
+        function agregarHorario() {
+            const container = document.getElementById("contenedor-horarios");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "horarios";
+            input.required = true;
+            input.placeholder = "Ej. Lunes a Viernes, 6:00 PM - 7:00 PM";
+            container.appendChild(input);
+        }
+    </script>
+
+</body>
+</html>

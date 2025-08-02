@@ -2,23 +2,44 @@ from django.shortcuts import render, redirect
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db_con
-from datetime import datetime
-from bson import ObjectId
+from datetime import datetime, timedelta
+import calendar
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from django.http import HttpResponse
 
 # Create your views here.
 
-def redireccion(request):
-    return redirect('vista_prueba')
+def inicio(request):
+    return render(request, 'inicio.html')
 
-def vista_prueba(request):
-    # Accede a una colección (ajusta el nombre según lo que creaste en Atlas)
-    coleccion = db_con.db["personas"]  # o el  nombre real de la colección
+def principal(request):
+    if 'usuario' not in request.session:
+        return redirect('login')
 
-    # Obtén todos los documentos, y convierte el cursor a lista
-    documentos = list(coleccion.find())  # Opcional: elimina _id
+    nombre = request.session.get('nombre', 'Usuario')
+    return render(request, 'principal.html', {'nombre': nombre})
 
-    # Renderiza el template con los datos
-    return render(request, 'prueba.html', {'datos': documentos})
+def inicia_sesion(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Conexión a la colección "personal"
+        personal_col = db_con.db["personal"]
+        usuario = personal_col.find_one({"usuario": username})
+
+        if usuario and usuario["contraseña"] == password:
+            # Inicia sesión simulando autenticación con sesión propia
+            request.session['usuario'] = usuario["usuario"]
+            request.session['nombre'] = usuario["nombre"]
+            return redirect('principal')
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos')
+
+    return render(request, 'login.html')
 
 def convertir_actividades(actividades):
     lista = []
@@ -35,6 +56,7 @@ def registro_derechohabiente(request):
 
     if request.method == "POST":
         datos = {
+            "id_Personal": generar_id_personal(),
             "nombre": request.POST.get("nombre"),
             "apellido": request.POST.get("apellido"),
             "edad": int(request.POST.get("edad")),
@@ -48,8 +70,156 @@ def registro_derechohabiente(request):
             "horario": request.POST.get("horario")
         }
         personas_col.insert_one(datos)
-        return redirect("vista_prueba")
+        return redirect("personas")
 
     actividades = list(actividades_col.find())
     actividades_json = convertir_actividades(actividades)
     return render(request, "registro.html", {"actividades": actividades_json})
+
+def vista_personas(request):
+    personas_col = db_con.db["personas"]
+    datos = list(personas_col.find({}, {'_id': 0}))  # Quitamos _id para evitar problemas con la serialización
+    return render(request, 'personas.html', {'personas': datos})
+
+def vista_actividades(request):
+    actividades_col = db_con.db["actividades"]
+    actividades = list(actividades_col.find({}, {'_id': 0}))
+    return render(request, 'actividades.html', {'actividades': actividades})
+
+def generar_id_personal():
+    personas_col = db_con.db["personas"]
+    ultima = personas_col.find_one(sort=[("id_Personal", -1)])
+    if ultima and "id_Personal" in ultima:
+        try:
+            ultimo_numero = int(ultima["id_Personal"].split("-")[-1])
+        except:
+            ultimo_numero = 0
+    else:
+        ultimo_numero = 0
+    nuevo_id = f"PER-{ultimo_numero + 1:03}"
+    return nuevo_id
+
+def exportar_asistencia_excel(request):
+    personas_col = db_con.db["personas"]
+    asistencia_col = db_con.db["asistencia"]
+
+    hoy = datetime.now()
+    mes_actual = hoy.strftime("%B %Y")
+    ultimo_dia = calendar.monthrange(hoy.year, hoy.month)[1]
+    dias_mes = [f"{dia:02}" for dia in range(1, ultimo_dia + 1)]
+
+    personas = list(personas_col.find({}, {"_id": 0}))
+    asistencia_por_actividad = {}
+
+    for persona in personas:
+        actividad = persona.get("actividad", "Sin Actividad")
+        if actividad not in asistencia_por_actividad:
+            asistencia_por_actividad[actividad] = []
+
+        asistencias = asistencia_col.find({
+            "id_Personal": persona["id_Personal"],
+            "fecha": {"$regex": f"^{hoy.strftime('%Y-%m')}"}
+        })
+        asistencias_dict = {a["fecha"][-2:]: a["asistio"] for a in asistencias}
+        persona["asistencias"] = asistencias_dict
+
+        asistencia_por_actividad[actividad].append(persona)
+
+    # Crear libro de Excel
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Asistencia"
+
+    fila_actual = 1
+    for actividad, personas in asistencia_por_actividad.items():
+        # Título de actividad
+        ws.merge_cells(start_row=fila_actual, start_column=1, end_row=fila_actual, end_column=2 + len(dias_mes))
+        cell = ws.cell(row=fila_actual, column=1)
+        cell.value = f"Asistencia - {actividad} - {mes_actual}"
+        cell.font = Font(bold=True, size=14)
+        fila_actual += 1
+
+        # Encabezados
+        encabezados = ["ID Personal", "Nombre"] + dias_mes
+        for col, encabezado in enumerate(encabezados, start=1):
+            celda = ws.cell(row=fila_actual, column=col)
+            celda.value = encabezado
+            celda.font = Font(bold=True)
+        fila_actual += 1
+
+        # Datos de asistencia
+        for persona in personas:
+            ws.cell(row=fila_actual, column=1).value = persona["id_Personal"]
+            ws.cell(row=fila_actual, column=2).value = f'{persona.get("nombre", "")} {persona.get("apellidos", "")}'
+            for idx, dia in enumerate(dias_mes, start=3):
+                asistio = persona["asistencias"].get(dia, False)
+                ws.cell(row=fila_actual, column=idx).value = ""
+            fila_actual += 1
+
+        fila_actual += 2  # Espacio entre actividades
+
+    # Enviar como archivo descargable
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    nombre_archivo = f"asistencia_{hoy.strftime('%Y_%m')}.xlsx"
+    response["Content-Disposition"] = f'attachment; filename="{nombre_archivo}"'
+    wb.save(response)
+    return response
+
+def lista_asistencia(request):
+    personas_col = db_con.db["personas"]
+    asistencia_col = db_con.db["asistencia"]
+
+    hoy = datetime.now()
+    mes_actual = hoy.strftime("%B %Y")
+    ultimo_dia = calendar.monthrange(hoy.year, hoy.month)[1]
+    dias_mes = [f"{dia:02}" for dia in range(1, ultimo_dia + 1)]
+
+    personas = list(personas_col.find({}, {"_id": 0}))
+    asistencia_por_actividad = {}
+
+    for persona in personas:
+        actividad = persona.get("actividad", "Sin Actividad")
+        if actividad not in asistencia_por_actividad:
+            asistencia_por_actividad[actividad] = []
+
+        asistencias = asistencia_col.find({
+            "id_Personal": persona["id_Personal"],
+            "fecha": {"$regex": f"^{hoy.strftime('%Y-%m')}"}
+        })
+        asistencias_dict = {a["fecha"][-2:]: a["asistio"] for a in asistencias}
+        persona["asistencias"] = asistencias_dict
+
+        asistencia_por_actividad[actividad].append(persona)
+
+    return render(request, "asistencia.html", {
+        "asistencia_por_actividad": asistencia_por_actividad,
+        "dias_mes": dias_mes,
+        "mes_actual": mes_actual
+    })
+
+def generar_id_act():
+    actividades_col = db_con.db["actividades"]
+    ultima = actividades_col.find().sort("id_actividad", -1).limit(1)
+    try:
+        ultimo = list(ultima)[0]['id_actividad']
+        numero = int(ultimo.split("-")[1]) + 1
+    except:
+        numero = 1
+    return f"ACT-{numero:03d}"
+
+def registrar_actividad(request):
+    actividades_col = db_con.db["actividades"]
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        horarios = request.POST.getlist("horarios")
+
+        nueva_actividad = {
+            "id_actividad": generar_id_act(),
+            "nombre": nombre,
+            "horarios": horarios
+        }
+
+        actividades_col.insert_one(nueva_actividad)
+        return redirect('principal')  # Asegúrate de que 'principal' esté en tus urls
+
+    return render(request, "reg_actividad.html")

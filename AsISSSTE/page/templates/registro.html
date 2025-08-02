@@ -4,58 +4,61 @@
     <meta charset="UTF-8">
     <title>Registro de Derechohabiente</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static '/registro.css' %}">
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
 </head>
 <body>
-    <h2>Registro de Derechohabiente</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required>
 
-        <label>Apellido:</label>
-        <input type="text" name="apellido" required>
+    <div class="form-container">
+        <h2>Registro de Derechohabiente</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required>
 
-        <label>Edad:</label>
-        <input type="number" name="edad" required>
+            <label>Apellido:</label>
+            <input type="text" name="apellido" required>
 
-        <label>CURP:</label>
-        <input type="text" name="curp" required>
+            <label>Edad:</label>
+            <input type="number" name="edad" required>
 
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" required>
+            <label>CURP:</label>
+            <input type="text" name="curp" required>
 
-        <label>Teléfono en caso de emergencia:</label>
-        <input type="text" name="telefono_emergencia" required>
+            <label>Teléfono:</label>
+            <input type="text" name="telefono" required>
 
-        <label>Correo electrónico:</label>
-        <input type="email" name="correo" required>
+            <label>Teléfono en caso de emergencia:</label>
+            <input type="text" name="telefono_emergencia" required>
 
-        <label>Género:</label>
-        <select name="genero" required>
-            <option value="">Selecciona...</option>
-            <option value="Hombre">Hombre</option>
-            <option value="Mujer">Mujer</option>
-        </select>
+            <label>Correo electrónico:</label>
+            <input type="email" name="correo" required>
 
-        <label>Actividad:</label>
-        <select name="actividad" id="actividad" required onchange="actualizarHorarios()">
-            <option value="">Selecciona una actividad</option>
-            {% for act in actividades %}
-                <option value="{{ act.nombre }}">{{ act.nombre }}</option>
-            {% endfor %}
-        </select>
+            <label>Género:</label>
+            <select name="genero" required>
+                <option value="">Selecciona...</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Mujer">Mujer</option>
+            </select>
 
-        <label>Horario:</label>
-        <select name="horario" id="horario" required>
-            <option value="">Selecciona un horario</option>
-        </select>
+            <label>Actividad:</label>
+            <select name="actividad" id="actividad" required onchange="actualizarHorarios()">
+                <option value="">Selecciona una actividad</option>
+                {% for act in actividades %}
+                    <option value="{{ act.nombre }}">{{ act.nombre }}</option>
+                {% endfor %}
+            </select>
 
-        <button type="submit">Registrar</button>
-    </form>
+            <label>Horario:</label>
+            <select name="horario" id="horario" required>
+                <option value="">Selecciona un horario</option>
+            </select>
+
+            <button type="submit">Registrar</button>
+        </form>
+        <a href="{% url 'vista_personas' %}" class="btn-regresar">← Regresar</a>
+    </div>
 
     <script>
-        // Ejemplo básico para actualizar horarios según la actividad seleccionada
         const actividades = {{ actividades|safe }};
 
         function actualizarHorarios() {
@@ -63,12 +66,10 @@
             const selectHorario = document.getElementById('horario');
             const actividadSeleccionada = selectActividad.value;
 
-            // Limpiar horarios
             selectHorario.innerHTML = '<option value="">Selecciona un horario</option>';
 
             if (!actividadSeleccionada) return;
 
-            // Buscar actividad seleccionada
             const actividad = actividades.find(act => act.nombre === actividadSeleccionada);
 
             if (actividad && actividad.horarios) {
@@ -81,5 +82,6 @@
             }
         }
     </script>
+
 </body>
 </html>
