@@ -19,12 +19,13 @@
                 <th>Edad</th>   
                 <th>CURP</th>
                 <th>Teléfono</th>
-                <th>Emergencia</th>
+                <th>Contacto de Emergencia</th>
                 <th>Correo</th>
                 <th>Fecha Registro</th>
                 <th>Género</th>
                 <th>Actividad</th>
                 <th>Horario</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +43,10 @@
                     <td>{{ persona.genero }}</td>
                     <td>{{ persona.actividad }}</td>
                     <td>{{ persona.horario }}</td>
+                    <td>
+                        <a href="{% url 'editar_persona' persona.id_Personal %}" class="btn-editar">Editar</a>
+                        <a href="{% url 'eliminar_persona' persona.id_Personal %}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -31,5 +31,7 @@ urlpatterns = [
     path("registro_actividad/", views.registrar_actividad, name="registro_actividad"),
     path('actividades/editar/<str:id_actividad>/', views.editar_actividad, name='editar_actividad'),
     path('actividades/eliminar/<str:id_actividad>/', views.eliminar_actividad, name='eliminar_actividad'),
+    path('editar-persona/<str:id_personal>/', views.editar_persona, name='editar_persona'),
+    path('eliminar-persona/<str:id_personal>/', views.eliminar_persona, name='eliminar_persona'),
 
 ]

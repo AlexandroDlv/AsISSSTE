@@ -251,3 +251,42 @@ def eliminar_actividad(request, id_actividad):
     actividades_col = db_con.db["actividades"]
     actividades_col.delete_one({'id_actividad': id_actividad})
     return redirect('vista_actividades')
+
+def editar_persona(request, id_personal):
+    personas_col = db_con.db["personas"]
+    persona = personas_col.find_one({"id_Personal": id_personal})
+
+    if not persona:
+        return redirect("vista_personas")
+
+    if request.method == "POST":
+        datos_actualizados = {
+            "nombre": request.POST.get("nombre"),
+            "apellido": request.POST.get("apellido"),
+            "edad": int(request.POST.get("edad")),
+            "curp": request.POST.get("curp"),
+            "telefono": request.POST.get("telefono"),
+            "telefono_emergencia": request.POST.get("telefono_emergencia"),
+            "correo": request.POST.get("correo"),
+            "genero": request.POST.get("genero"),
+            "actividad": request.POST.get("actividad"),
+            "horario": request.POST.get("horario")
+        }
+
+        personas_col.update_one(
+            {"id_Personal": id_personal},
+            {"$set": datos_actualizados}
+        )
+
+        return redirect("vista_personas")
+
+    return render(request, "editar_persona.html", {"persona": persona})
+
+def eliminar_persona(request, id_personal):
+    personas_col = db_con.db["personas"]
+    persona = personas_col.find_one({"id_Personal": id_personal})
+
+    if persona:
+        personas_col.delete_one({"id_Personal": id_personal})
+
+    return redirect("vista_personas")

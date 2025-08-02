@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/editar_persona.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Editar Usuario</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label>Nombre:
+                <input type="text" name="nombre" value="{{ persona.nombre }}" required>
+            </label>
+
+            <label>Apellidos:
+                <input type="text" name="apellido" value="{{ persona.apellido }}" required>
+            </label>
+
+            <label>Edad:
+                <input type="number" name="edad" value="{{ persona.edad }}" required>
+            </label>
+
+            <label>CURP:
+                <input type="text" name="curp" value="{{ persona.curp }}" required>
+            </label>
+
+            <label>Teléfono:
+                <input type="text" name="telefono" value="{{ persona.telefono }}" required>
+            </label>
+
+            <label>Tel. Emergencia:
+                <input type="text" name="telefono_emergencia" value="{{ persona.telefono_emergencia }}" required>
+            </label>
+
+            <label>Correo:
+                <input type="email" name="correo" value="{{ persona.correo }}" required>
+            </label>
+
+            <label>Género:
+                <select name="genero">
+                    <option value="Masculino" {% if persona.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+                    <option value="Femenino" {% if persona.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+                    <option value="Otro" {% if persona.genero == "Otro" %}selected{% endif %}>Otro</option>
+                </select>
+            </label>
+
+            <label>Actividad:
+                <input type="text" name="actividad" value="{{ persona.actividad }}" required>
+            </label>
+
+            <label>Horario:
+                <input type="text" name="horario" value="{{ persona.horario }}" required>
+            </label>
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+
+        <a href="{% url 'vista_personas' %}" class="btn-regresar">← Cancelar</a>
+    </div>
+
+</body>
+</html>

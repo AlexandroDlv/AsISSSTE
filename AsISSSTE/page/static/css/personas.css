@@ -19,12 +19,17 @@ table {
 }
 
 th, td {
-    padding: 10px;
+    padding: 30px 10px;
     border: 1px solid #ddd;
     text-align: center;
+    vertical-align: middle;
     word-wrap: break-word;     /* permite cortar palabras largas */
     white-space: normal;       /* permite que el texto baje de línea */
     font-size: 14px;
+}
+
+tr {
+    min-height: 60px;
 }
 
 th {
@@ -71,3 +76,37 @@ tr:hover {
 .btn-registrar:hover {
     background-color: #1a252f;
 }
+
+.btn-editar {
+    background-color: #2980b9;
+    color: white;
+    padding: 6px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.btn-editar:hover {
+    background-color: #1c5981;
+}
+
+.btn-eliminar {
+    background-color: #c0392b;
+    color: white;
+    padding: 6px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.btn-eliminar:hover {
+    background-color: #992d22;
+}
+
+.btn-editar, .btn-eliminar {
+    display: inline-block;
+    margin: 4px;
+}
+
+
