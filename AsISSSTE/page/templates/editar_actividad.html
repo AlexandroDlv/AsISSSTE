@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Actividad</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/editar_actividad.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Editar Actividad</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ actividad.nombre }}" required>
+
+            <label>Horarios:</label>
+            {% for horario in actividad.horarios %}
+                <input type="text" name="horarios" value="{{ horario }}">
+            {% endfor %}
+            <input type="text" name="horarios" placeholder="Nuevo horario">
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+
+        <a href="{% url 'vista_actividades' %}" class="btn-regresar">← Cancelar</a>
+    </div>
+
+</body>
+</html>

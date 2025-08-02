@@ -29,5 +29,7 @@ urlpatterns = [
     path('personas/', views.vista_personas, name='vista_personas'),
     path('asistencia/exportar_excel/', views.exportar_asistencia_excel, name='exportar_excel'),
     path("registro_actividad/", views.registrar_actividad, name="registro_actividad"),
+    path('actividades/editar/<str:id_actividad>/', views.editar_actividad, name='editar_actividad'),
+    path('actividades/eliminar/<str:id_actividad>/', views.eliminar_actividad, name='eliminar_actividad'),
 
 ]

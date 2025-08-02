@@ -220,6 +220,34 @@ def registrar_actividad(request):
         }
 
         actividades_col.insert_one(nueva_actividad)
-        return redirect('principal')  # Asegúrate de que 'principal' esté en tus urls
+        return redirect('vista_actividades')  # Asegúrate de que 'principal' esté en tus urls
 
     return render(request, "reg_actividad.html")
+
+def editar_actividad(request, id_actividad):
+    actividades_col = db_con.db["actividades"]
+    actividad = actividades_col.find_one({"id_actividad": id_actividad})
+
+    if not actividad:
+        return redirect("vista_actividades")  # Por si no existe
+
+    if request.method == "POST":
+        nuevo_nombre = request.POST.get("nombre")
+        nuevos_horarios = request.POST.getlist("horarios")
+        nuevos_horarios = [h.strip() for h in nuevos_horarios if h.strip()]  # Filtrar vacíos
+
+        actividades_col.update_one(
+            {"id_actividad": id_actividad},
+            {"$set": {
+                "nombre": nuevo_nombre,
+                "horarios": nuevos_horarios
+            }}
+        )
+        return redirect("vista_actividades")
+
+    return render(request, "editar_actividad.html", {"actividad": actividad})
+
+def eliminar_actividad(request, id_actividad):
+    actividades_col = db_con.db["actividades"]
+    actividades_col.delete_one({'id_actividad': id_actividad})
+    return redirect('vista_actividades')
