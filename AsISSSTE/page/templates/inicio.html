@@ -3,14 +3,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio - Deportivo ISSSTE</title>
+    <title>Deportivo ISSSTE</title>
     <link rel="stylesheet" href="{% static 'css/inicio.css' %}">
 </head>
 <body>
-    <div class="hero">
+<div class="hero" style="background-image: url('{% static 'resources/deportivo.jpeg' %}');">
         <div class="overlay"></div>
         <div class="content">
-            <h1>Bienvenido al Deportivo ISSSTE</h1>
+            <h1>Bienvenido a la pagina principal <br>
+                del Deportivo ISSSTE</h1>
             <a href="{% url 'login' %}" class="btn-login">Iniciar sesión</a>
         </div>
     </div>

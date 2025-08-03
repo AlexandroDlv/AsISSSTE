@@ -8,26 +8,34 @@
 </head>
 <body>
     <div class="login-container">
-        <div class="login-box">
-            <h2>Iniciar Sesión</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <label for="username">Usuario:</label>
-                <input type="text" name="username" id="username" required>
+        <div class="login-left">
+            <div class="login-box">
+                <h2>Iniciar Sesión</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <label for="username">Usuario:</label>
+                    <input type="text" name="username" id="username" required>
 
-                <label for="password">Contraseña:</label>
-                <input type="password" name="password" id="password" required>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" name="password" id="password" required>
 
-                <button type="submit">Ingresar</button>
+                    <button type="submit">Ingresar</button>
 
-                {% if messages %}
-                    <ul class="error">
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </form>
+                    {% if messages %}
+                        <ul class="error">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <div class="login-right">
+            <div class="image-container">
+                <img src="{% static 'resources/alberca_dep.jpeg' %}" alt="Imagen Alberca Deportivo">
+            </div>
         </div>
     </div>
 </body>

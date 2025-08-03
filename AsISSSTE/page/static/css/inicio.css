@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body, html {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Poppins', sans-serif;
     height: 100%;
     background-color: #f4f4f4;
 }
@@ -10,7 +12,9 @@ body, html {
     position: relative;
     width: 100%;
     height: 100vh;
-    background: url("../img/deportivo.jpg") center center/cover no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,7 +26,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(44, 62, 80, 0.6); /* semitransparente */
+    background-color: rgba(1, 14, 28, 0.6);
 }
 
 .content {
@@ -30,25 +34,29 @@ body, html {
     z-index: 1;
     text-align: center;
     color: white;
+    max-width: 80%;
 }
 
 .content h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 60px; /* Aumenta espacio con el botón */
 }
 
 .btn-login {
-    padding: 12px 25px;
+    padding: 14px 30px;
     font-size: 18px;
-    background-color: #27ae60;
+    background-color: rgb(2, 30, 91);
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .btn-login:hover {
-    background-color: #219150;
+    background-color: rgb(1, 1, 62);
 }
