@@ -10,14 +10,49 @@
     <div class="container">
         <div class="sidebar">
             <h2>Menú</h2>
-            <a href="{% url 'vista_personas' %}">Derechohabientes</a>
-            <a href="{% url 'vista_actividades' %}">Actividades</a>
-            <a href="{% url 'lista_asistencia' %}">Lista de Asistencia</a>
+            <a href="{% url 'vista_personas' %}">👤 Derechohabientes</a>
+            <a href="{% url 'vista_actividades' %}">🏃 Actividades</a>
+            <a href="{% url 'lista_asistencia' %}">📋 Lista de Asistencia</a>
         </div>
+
         <div class="content">
-            <h1>Bienvenido {{ nombre }}! </h1>
+            <h1>Bienvenido {{ nombre }}!</h1>
             <h2>Este es el sistema del Deportivo ISSSTE</h2>
-            <p>Selecciona una opción del menú para comenzar.</p>
+
+            <div class="institution-image" style="background-image: url('{% static 'resources/cancha_dep.jpeg' %}');">
+            </div>
+
+            <div class="mvv-section">
+                <div>
+                    <h3>Misión</h3>
+                    <p>Contribuir a satisfacer niveles de bienestar integral de los trabajadores al servicio del estado, 
+                        pensionados, jubilados y familiares derechohabientes, con el otorgamiento eficaz y eficiente de los 
+                        seguros, prestaciones y servicios, con atención esmerada, respeto, calidad y cumpliendo siempre con los 
+                        valores institucionales de honestidad, legalidad y transparencia.</p>
+                </div>
+                <div>
+                    <h3>Visión</h3>
+                    <p>Visualizar una derechohabiencia con servicios acordes a sus necesidades y expectativas,
+                        normalizados bajo códigos de calidad y calidez convenidos con la institución, que le permitan
+                        generar valores y prácticas para la mejora sostenida de bienestar y calidad de vida, y con una
+                        diversificación de las actividades en materia de deporte, cultura y recreación.</p>
+                </div>
+                <div class="section-box">
+                    <h3>Políticas Institucionales</h3>
+                    <ul class="policy-list">
+                        <li><strong>Bien común:</strong> Asumo un compromiso irrenunciable con el bien común, entendiendo que el servicio público es patrimonio de todos los mexicanos y mexicanas.</li>
+                        <li><strong>Integridad:</strong> Ceñiré mi conducta pública y privada de modo tal que mis acciones y palabras sean honestas y dignas de credibilidad.</li>
+                        <li><strong>Imparcialidad:</strong> Actuaré siempre en forma imparcial, sin conceder preferencias o privilegios indebidos a persona alguna.</li>
+                        <li><strong>Justicia:</strong> Ceñiré mis actos a la estricta observancia de la ley, impulsando una cultura de justicia y respeto al Estado de derecho.</li>
+                        <li><strong>Transparencia:</strong> Garantizaré el acceso a la información gubernamental y el uso transparente de recursos públicos.</li>
+                        <li><strong>Rendición de cuentas:</strong> Proveeré eficacia, calidad y rendición de cuentas en la administración pública.</li>
+                        <li><strong>Honradez:</strong> Nunca usaré mi cargo público para ganancia personal ni aceptaré compensaciones indebidas.</li>
+                        <li><strong>Generosidad:</strong> Actuaré con sensibilidad y solidaridad hacia los más vulnerables de nuestra sociedad.</li>
+                        <li><strong>Igualdad:</strong> Procuraré igualdad de oportunidades para todos, sin distingo de sexo, edad, raza, religión o preferencia política.</li>
+                        <li><strong>Respeto:</strong> Representaré la dignidad humana y los derechos inherentes con trato amable y tolerante.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </body>
