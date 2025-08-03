@@ -6,9 +6,9 @@ from datetime import datetime, timedelta
 import calendar
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from openpyxl import Workbook
-from openpyxl.styles import Font
-from openpyxl.utils import get_column_letter
+from openpyxl import Workbook # type: ignore
+from openpyxl.styles import Font # type: ignore
+from openpyxl.utils import get_column_letter # type: ignore son para quitar los avisos de error
 from django.http import HttpResponse
 
 # Create your views here.
