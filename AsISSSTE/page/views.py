@@ -85,8 +85,20 @@ def registro_derechohabiente(request):
 
 def vista_personas(request):
     personas_col = db_con.db["personas"]
-    datos = list(personas_col.find({}, {'_id': 0})) 
-    return render(request, 'personas.html', {'personas': datos})
+    query = request.GET.get("buscar", "").strip()
+    
+    if query:
+        datos = list(personas_col.find(
+            {"nombre": {"$regex": query, "$options": "i"}},
+            {'_id': 0}
+        ))
+    else:
+        datos = list(personas_col.find({}, {'_id': 0}))
+
+    return render(request, 'personas.html', {
+        'personas': datos,
+        'buscar': query
+    })
 
 def vista_actividades(request):
     actividades_col = db_con.db["actividades"]

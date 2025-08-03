@@ -12,6 +12,13 @@
 
     <h1>Personas Registradas</h1>
 
+    <div style="text-align: right; margin-bottom: 20px;">
+        <form method="get">
+            <input type="text" name="buscar" placeholder="Buscar por nombre" value="{{ request.GET.buscar|default_if_none:'' }}">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr>

@@ -23,8 +23,8 @@ th, td {
     border: 1px solid #ddd;
     text-align: center;
     vertical-align: middle;
-    word-wrap: break-word;     /* permite cortar palabras largas */
-    white-space: normal;       /* permite que el texto baje de línea */
+    word-wrap: break-word;     
+    white-space: normal;       
     font-size: 14px;
 }
 
@@ -78,7 +78,7 @@ tr:hover {
 }
 
 .btn-editar {
-    background-color: #2980b9;
+    background-color: #013557;
     color: white;
     padding: 6px 10px;
     text-decoration: none;
@@ -87,11 +87,11 @@ tr:hover {
 }
 
 .btn-editar:hover {
-    background-color: #1c5981;
+    background-color: #013557;
 }
 
 .btn-eliminar {
-    background-color: #c0392b;
+    background-color: #6c0c02;
     color: white;
     padding: 6px 10px;
     text-decoration: none;
@@ -101,7 +101,7 @@ tr:hover {
 }
 
 .btn-eliminar:hover {
-    background-color: #992d22;
+    background-color: #6c0c02;
 }
 
 .btn-editar, .btn-eliminar {
@@ -110,8 +110,8 @@ tr:hover {
 }
 
 .col-actividades {
-    width: 250px; /* Puedes ajustarlo según necesites */
-    text-align: left; /* Para que el texto no quede centrado */
+    width: 250px; 
+    text-align: left; 
 }
 
 .col-actividades ul {
@@ -123,4 +123,24 @@ tr:hover {
 .col-actividades li {
     margin-bottom: 5px;
     text-align: left;
+}
+
+form input[type="text"] {
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+
+form button {
+    padding: 6px 10px;
+    border: none;
+    background-color: #013557;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #013557;
 }

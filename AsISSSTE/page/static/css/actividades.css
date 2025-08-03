@@ -79,7 +79,7 @@ li {
 }
 
 .btn-editar {
-    background-color: #3498db;
+    background-color: #013557;
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
@@ -91,11 +91,11 @@ li {
 }
 
 .btn-editar:hover {
-    background-color: #2980b9;
+    background-color: #013557;
 }
 
 .btn-eliminar {
-    background-color: #e74c3c;
+    background-color: #6c0c02;
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
@@ -108,5 +108,5 @@ li {
 }
 
 .btn-eliminar:hover {
-    background-color: #c0392b;
+    background-color: #6c0c02;
 }

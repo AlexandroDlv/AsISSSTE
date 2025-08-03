@@ -10,11 +10,9 @@
     <div class="contenedor">
         <h1>Listas de Asistencia - {{ mes_actual }}</h1>
 
-        <!-- Botón para descargar Excel -->
         <a href="{% url 'exportar_excel' %}" class="btn btn-descargar">📥 Descargar Excel</a>
     </div>
 
-    <!-- Botón para regresar -->
     <a href="{% url 'principal' %}" class="btn btn-regresar">← Regresar</a>
 </body>
 </html>
