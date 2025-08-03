@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from openpyxl import Workbook
 from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 from django.http import HttpResponse
 
 # Create your views here.
@@ -173,6 +174,11 @@ def exportar_asistencia_excel(request):
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     nombre_archivo = f"asistencia_{hoy.strftime('%Y_%m')}.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{nombre_archivo}"'
+    anchos = [15, 20, 25] + [5] * len(dias_mes)  # Ajusta según el contenido que esperas
+
+    for i, ancho in enumerate(anchos, start=1):
+        col_letra = get_column_letter(i)
+        ws.column_dimensions[col_letra].width = ancho
     wb.save(response)
     return response
 
