@@ -320,3 +320,7 @@ def eliminar_persona(request, id_personal):
         personas_col.delete_one({"id_Personal": id_personal})
 
     return redirect("vista_personas")
+
+def logout(request):
+    request.session.flush()
+    return redirect('login')
