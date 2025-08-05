@@ -23,8 +23,59 @@
     bottom: 40px;
     left: 50px;
     font-size: 14px;
+    z-index: 2;
 }
 
 .btn-descargar {
     margin-top: 20px;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* 🔒 Evita scroll */
+    font-family: sans-serif;
+}
+
+.fondo {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 100% de la altura de la ventana */
+    background-image: url("../resources/issste2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Capa oscura */
+    z-index: 1;
+}
+
+.contenido {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+    align-items: center;     /* Centra horizontalmente */
+    color: white;
+    text-align: center;
+}
+
+.btn {
+    margin-top: 20px;
+}
+

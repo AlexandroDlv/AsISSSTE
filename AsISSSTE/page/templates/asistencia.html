@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="{% static 'css/asistencia.css' %}">
 </head>
 <body>
-    <div class="contenedor">
-        <h1>Listas de Asistencia - {{ mes_actual }}</h1>
+    <div class="fondo">
+        <div class="overlay"></div>
 
-        <a href="{% url 'exportar_excel' %}" class="btn btn-descargar">📥 Descargar Excel</a>
+        <div class="contenido">
+            <h1>Listas de Asistencia - {{ mes_actual }}</h1>
+            <a href="{% url 'exportar_excel' %}" class="btn btn-descargar">📥 Descargar Excel</a>
+        </div>
+
+        <a href="{% url 'principal' %}" class="btn btn-regresar">← Regresar</a>
     </div>
-
-    <a href="{% url 'principal' %}" class="btn btn-regresar">← Regresar</a>
 </body>
 </html>
