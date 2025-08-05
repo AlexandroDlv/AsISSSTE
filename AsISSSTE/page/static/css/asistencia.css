@@ -38,14 +38,14 @@
 
 html, body {
     height: 100%;
-    overflow: hidden; /* 🔒 Evita scroll */
+    overflow: hidden;
     font-family: sans-serif;
 }
 
 .fondo {
     position: relative;
     width: 100%;
-    height: 100vh; /* 100% de la altura de la ventana */
+    height: 100vh; 
     background-image: url("../resources/issste2.jpg");
     background-size: cover;
     background-position: center;
@@ -58,7 +58,7 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Capa oscura */
+    background-color: rgba(0, 0, 0, 0.7); 
     z-index: 1;
 }
 
@@ -69,8 +69,8 @@ html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra verticalmente */
-    align-items: center;     /* Centra horizontalmente */
+    justify-content: center; 
+    align-items: center;    
     color: white;
     text-align: center;
 }

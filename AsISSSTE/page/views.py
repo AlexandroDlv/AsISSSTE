@@ -174,7 +174,7 @@ def exportar_asistencia_excel(request):
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     nombre_archivo = f"asistencia_{hoy.strftime('%Y_%m')}.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{nombre_archivo}"'
-    anchos = [15, 20, 25] + [5] * len(dias_mes)  # Ajusta según el contenido que esperas
+    anchos = [15, 20, 25] + [5] * len(dias_mes)
 
     for i, ancho in enumerate(anchos, start=1):
         col_letra = get_column_letter(i)
